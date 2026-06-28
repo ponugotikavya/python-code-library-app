@@ -1,42 +1,49 @@
----
 services:
   db:
-    image: shaikmustafa/flm2026:dbimage
+    image: ponugotikavya/pyapp:dbimage
     ports:
       - "3306:3306"
-    deploy:
-      replicas: 1
+    networks:
+      - mynetwork
+
   auth_service:
-    image: shaikmustafa/flm2026:authimage
+    image: ponugotikavya/pyapp:authimage
     ports:
       - "5001:5001"
-    deploy:
-      replicas: 1
     depends_on:
       - db
+    networks:
+      - mynetwork
+
   book_service:
-    image: shaikmustafa/flm2026:bookimage
+    image: ponugotikavya/pyapp:bookimage
     ports:
       - "5002:5002"
-    deploy:
-      replicas: 1
     depends_on:
       - db
+    networks:
+      - mynetwork
+
   borrow_service:
-    image: shaikmustafa/flm2026:borrowimage
+    image: ponugotikavya/pyapp:borrowimage
     ports:
       - "5003:5003"
-    deploy:
-      replicas: 1
     depends_on:
       - db
+    networks:
+      - mynetwork
+
   app_service:
-    image: shaikmustafa/flm2026:appimage
+    image: ponugotikavya/pyapp:frontend
     ports:
       - "5000:5000"
-    deploy:
-      replicas: 1
     depends_on:
       - auth_service
       - book_service
       - borrow_service
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
